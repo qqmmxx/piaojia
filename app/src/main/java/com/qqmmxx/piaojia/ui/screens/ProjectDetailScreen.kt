@@ -51,6 +51,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -156,10 +157,11 @@ fun ProjectDetailScreen(
                         Text(
                             text = if (currentProject.isCompleted) "已完成" else "进行中",
                             style = MaterialTheme.typography.bodySmall,
-                            color = if (currentProject.isCompleted) 
-                                MaterialTheme.colorScheme.primary 
-                            else 
-                                Color.Gray
+                            // 顶栏底色是 primaryContainer，这里必须用 onPrimaryContainer 系列，
+                            // 原来的 primary / Color.Gray 落在橘色底上对比度不够
+                            color = MaterialTheme.colorScheme.onPrimaryContainer.copy(
+                                alpha = if (currentProject.isCompleted) 1f else 0.65f
+                            )
                         )
                     }
                 },
@@ -247,7 +249,14 @@ fun ProjectDetailScreen(
                             }
                         }
                     }
-                }
+                },
+                // 与列表页保持一致：顶栏用 primaryContainer，否则详情页会是默认的白底
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = MaterialTheme.colorScheme.primaryContainer,
+                    titleContentColor = MaterialTheme.colorScheme.onPrimaryContainer,
+                    navigationIconContentColor = MaterialTheme.colorScheme.onPrimaryContainer,
+                    actionIconContentColor = MaterialTheme.colorScheme.onPrimaryContainer
+                )
             )
         },
         floatingActionButton = {
