@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!--
+      图片读取权限：选图走 ACTION_GET_CONTENT，系统会给返回的 URI 授权，
+      正常情况并不需要这些权限。保留是为了兼容部分 OEM 定制相册 / 文件管理器。
+      应用从不请求运行时权限，因此不会弹权限框。
+      WRITE_EXTERNAL_STORAGE 已移除——导出走 SAF（CreateDocument），根本用不到，
+      在 Android 9 及以下反而会弹一个吓人的存储权限申请。
+    -->
+    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
+    <uses-permission
+        android:name="android.permission.READ_EXTERNAL_STORAGE"
+        android:maxSdkVersion="32" />
+
+    <application
+        android:name=".ExpenseApplication"
+        android:allowBackup="true"
+        android:dataExtractionRules="@xml/data_extraction_rules"
+        android:fullBackupContent="@xml/backup_rules"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.FaP2">
+        <activity
+            android:name=".MainActivity"
+            android:exported="true"
+            android:label="@string/app_name"
+            android:theme="@style/Theme.FaP2">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <!-- FileProvider：应用内图片以 content:// URI 记录，authority 必须与 ImageManager 中一致 -->
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="com.qqmmxx.piaojia.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider>
+    </application>
+
+</manifest>

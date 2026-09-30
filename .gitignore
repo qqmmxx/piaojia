@@ -1,0 +1,35 @@
+# Gradle / Android 构建产物
+*.iml
+.gradle/
+.kotlin/
+/build/
+/app/build/
+/captures/
+.externalNativeBuild
+.cxx
+*.apk
+*.aab
+*.jar
+!gradle/wrapper/gradle-wrapper.jar
+
+# 本机配置，包含 SDK 绝对路径，不应提交
+local.properties
+
+# IDE —— Android Studio / IntelliJ 的工程索引，每个人的机器都不一样，整体忽略
+.idea/
+
+# 系统
+.DS_Store
+Thumbs.db
+
+# 开发期手工截的老图（修复 Bug 前的界面，仅留本地参考）
+Screenshot_*.png
+
+# 签名与本地密钥（务必不要入库）
+*.jks
+*.keystore
+keystore.properties
+*.log
+
+# 工具本地数据
+.workbuddy/

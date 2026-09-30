@@ -1,0 +1,31 @@
+# 统一换行符，避免 Windows / macOS / Linux 之间产生整文件级 diff
+* text=auto eol=lf
+
+# Windows 批处理必须是 CRLF
+*.bat text eol=crlf
+*.cmd text eol=crlf
+
+# Shell 脚本必须保持 LF，否则在 Linux CI 上无法执行
+gradlew text eol=lf
+*.sh text eol=lf
+
+# 二进制文件不做换行转换、不参与文本 diff
+*.jar binary
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.webp binary
+*.gif binary
+*.ico binary
+*.jks binary
+*.keystore binary
+*.apk binary
+*.aab binary
+*.so binary
+*.exe binary
+*.zip binary
+*.pdf binary
+
+# 语言识别
+*.kt linguist-language=Kotlin
+*.kts linguist-language=Kotlin
