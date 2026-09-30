@@ -18,11 +18,13 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.qqmmxx.piaojia.ui.screens.ProjectDetailScreen
 import com.qqmmxx.piaojia.ui.screens.ProjectListScreen
 import com.qqmmxx.piaojia.ui.theme.FaP2Theme
+import com.qqmmxx.piaojia.ui.theme.ThemePreferences
 import com.qqmmxx.piaojia.viewmodel.ExpenseViewModel
 import kotlinx.coroutines.launch
 
@@ -30,9 +32,21 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+
+        val initialSeed = ThemePreferences.load(this)
+
         setContent {
-            FaP2Theme {
-                ExpenseReimbursementApp()
+            // 配色种子色由用户在「设置 → 配色」里选，改完立刻生效并落盘
+            var themeSeed by remember { mutableStateOf(initialSeed) }
+
+            FaP2Theme(seed = themeSeed) {
+                ExpenseReimbursementApp(
+                    themeSeed = themeSeed,
+                    onThemeSeedChange = { newSeed ->
+                        themeSeed = newSeed
+                        ThemePreferences.save(this, newSeed)
+                    }
+                )
             }
         }
     }
@@ -44,7 +58,10 @@ sealed class Screen {
 }
 
 @Composable
-fun ExpenseReimbursementApp() {
+fun ExpenseReimbursementApp(
+    themeSeed: Color,
+    onThemeSeedChange: (Color) -> Unit
+) {
     // 创建ViewModel
     val expenseViewModel: ExpenseViewModel = viewModel()
     // 当前屏幕状态
@@ -104,6 +121,8 @@ fun ExpenseReimbursementApp() {
             // 项目列表屏幕
             ProjectListScreen(
                 viewModel = expenseViewModel,
+                themeSeed = themeSeed,
+                onThemeSeedChange = onThemeSeedChange,
                 onProjectSelected = { projectId ->
                     // 确保我们选择了有效的项目ID
                     if (projectId.isNotEmpty()) {
